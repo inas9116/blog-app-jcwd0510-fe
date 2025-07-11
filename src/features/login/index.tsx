@@ -1,25 +1,24 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
-import useRegister from "@/hooks/api/auth/useRegister";
-import { RegisterSchema } from "./schemas";
+import { LoginSchema } from "./schema";
+import useLogin from "@/hooks/api/auth/useLogin";
 
-const RegisterPage = () => {
-  const { mutateAsync: register, isPending } = useRegister();
+const LoginPage = () => {
+  const { mutateAsync: login, isPending } = useLogin();
 
   const formik = useFormik({
     initialValues: {
-      name: "",
       email: "",
       password: "",
     },
-    validationSchema: RegisterSchema,
+    validationSchema: LoginSchema,
     onSubmit: async (values) => {
-      await register(values);
+      await login(values);
     },
   });
 
@@ -27,25 +26,11 @@ const RegisterPage = () => {
     <main className="flex justify-center pt-20">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+          <CardTitle>Sign in</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={formik.handleSubmit}>
             <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Name</Label>
-                <Input
-                  name="name"
-                  type="text"
-                  placeholder="Your Name"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {!!formik.touched.name && !!formik.errors.name ? (
-                  <p className="text-xs text-red-500">{formik.errors.name}</p>
-                ) : null}
-              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -80,13 +65,13 @@ const RegisterPage = () => {
               </div>
             </div>
             <Button type="submit" className="mt-4 w-full" disabled={isPending}>
-              {isPending ? "loading..." : "Register"}
+              {isPending ? "loading..." : "Login"}
             </Button>
             <a
-              href="login"
+              href="register"
               className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
             >
-              Or login to your account?
+              Or register
             </a>
           </form>
         </CardContent>
@@ -95,4 +80,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;
